@@ -2,6 +2,7 @@ package com.elsa.price_tracker;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +15,7 @@ public class Product {
     private Long id;
 
     private String name;
+    @Column(length = 2048)
     private String url;
     private Double targetPrice;
     private Double currentPrice;

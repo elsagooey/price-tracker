@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Price Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ebay Price Tracker!!!</h1>
+        <p style="color: #64748b; margin-bottom: 30px;">Track prices and buy at the right time.</p>
+
+        <div class="card">
+            <div class="input-group">
+                <input type="text" id="name" placeholder="Item Name">
+                <input type="text" id="url" placeholder="Paste URL">
+                <input type="number" id="target" placeholder="Target $">
+                <button class="btn-add" onclick="addProduct()">Track Item</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Current</th>
+                        <th>Target</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="productBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function loadProducts() {
+            fetch('/api/products')
+                .then(res => res.json())
+                .then(data => {
+                    const body = document.getElementById('productBody');
+                    body.innerHTML = '';
+                    data.forEach(p => {
+                        const isDeal = p.currentPrice <= p.targetPrice;
+                        const row = `<tr>
+                            <td><a href="${p.url}" target="_blank" style="text-decoration:none; color:#1e293b; font-weight:600;">${p.name}</a></td>
+                            <td>$${p.currentPrice || '---'}</td>
+                            <td>$${p.targetPrice}</td>
+                            <td>
+                                <span class="status-badge ${isDeal ? 'ready' : 'waiting'}">
+                                    ${isDeal ? 'Ready to Buy' : 'Watching'}
+                                </span>
+                            </td>
+                            <td style="text-align:right;">
+                                <button class="btn-delete" onclick="deleteProduct(${p.id})">Remove</button>
+                            </td>
+                        </tr>`;
+                        body.innerHTML += row;
+                    });
+                });
+        }
+
+        function addProduct() {
+            const product = {
+                name: document.getElementById('name').value,
+                url: document.getElementById('url').value,
+                targetPrice: document.getElementById('target').value
+            };
+            fetch('/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)
+            }).then(() => location.reload());
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Delete this item?")) {
+                fetch(`/api/products/${id}`, { method: 'DELETE' }).then(() => loadProducts());
+            }
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>
