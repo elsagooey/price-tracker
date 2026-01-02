@@ -18,15 +18,7 @@ public class ScraperService {
     
             String html = doc.html();
             String priceText = "";
-            if (url.contains("hollisterco.com")) {
-               
-                priceText = doc.select(".product-price-text, .price-sales").text();
-            
-                
-                if (priceText.isEmpty()) {
-                    priceText = doc.select("meta[property='og:price:amount']").attr("content");
-                }
-            }
+           
             if (url.contains("ebay.com")) {
                 priceText = doc.select(".x-price-primary").text();
     
