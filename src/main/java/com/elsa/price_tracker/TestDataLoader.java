@@ -19,7 +19,7 @@ public class TestDataLoader implements CommandLineRunner {
 
       
         Product testItem = new Product();
-        testItem.setName("Cool Sneakers");
+        testItem.setName("need to remove");
         testItem.setUrl("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html");
         testItem.setTargetPrice(100.0);
         testItem.setCurrentPrice(150.0);
